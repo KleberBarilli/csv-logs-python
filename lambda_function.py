@@ -1,15 +1,18 @@
 import json
 import urllib.request
+from io import StringIO
+import pandas as pd
 
+def main():
 
-def lambda_handler(event, context):
     res = urllib.request.urlopen(urllib.request.Request(
         url='https://swapi.dev/api/people/',
         headers={'Accept': 'application/json'},
         method='GET'))
+    res_json = json.loads(res.read().decode())
 
-    # TODO implement
-    return {
-        'statusCode': 200,
-        'body': json.loads(res.read())
-    }
+    df = pd.DataFrame(res_json['results'])
+
+    df.to_csv('df.csv', index=False)
+
+main()
